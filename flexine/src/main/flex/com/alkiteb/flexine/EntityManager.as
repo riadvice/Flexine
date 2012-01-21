@@ -18,7 +18,8 @@ package com.alkiteb.flexine
 {
 
     import com.alkiteb.flexine.config.SQLConfiguration;
-
+    import com.alkiteb.flexine.errors.ConfigurationError;
+    
     import flash.filesystem.File;
 
     public class EntityManager
@@ -48,16 +49,37 @@ package com.alkiteb.flexine
             return _instance;
         }
 
+        /**
+         * Returns the EntityManager configuration.
+         */
         public function set configuration( config : SQLConfiguration ) : void
         {
+            // TODO : close the previous connection if exists
             _config = config;
         }
 
-        public function openSyncConnection() : void
+        /**
+         * Opens a connection to the database.
+         */
+        public function openConnection() : void
         {
             // TODO : add async mode
-            // TODO : close the previous connection if exists
-            _config.connection.open(new File(_config.dbPath), _config.sqlMode);
+            if ( _config )
+            {
+                _config.connection.open(new File(_config.dbPath), _config.sqlMode);
+            }
+            else
+            {
+                throw new ConfigurationError( "noConfiguration" );
+            }
+        }
+        
+        /**
+         * Closes a connection to the database.
+         */
+        public function closeConnection() : void
+        {
+            _config.connection.close();
         }
     }
 }

@@ -18,12 +18,13 @@ package com.alkiteb.flexine.api
 {
     import com.alkiteb.flexine.EntityManager;
     import com.alkiteb.flexine.config.SQLConfiguration;
-
+    import com.alkiteb.flexine.errors.ConfigurationError;
+    
     import flash.data.SQLMode;
     import flash.filesystem.File;
-
+    
     import flashx.textLayout.operations.RedoOperation;
-
+    
     import flexunit.framework.Assert;
 
     public class EntityManagerTest
@@ -34,11 +35,8 @@ package com.alkiteb.flexine.api
         private var configReadMode : SQLConfiguration;
 
         private var createDB : String = "api_create_test.db";
-        private var readDB : String = "api_update_test.db";
-        private var updateDB : String = "api_read_test.db";
-
-
-
+        private var updateDB : String = "api_update_test.db";
+        private var readDB : String = "api_read_test.db";
 
         [Before]
         public function setUp() : void
@@ -71,6 +69,22 @@ package com.alkiteb.flexine.api
         {
         }
 
+        /**
+         * Cleans up the configuration before each test run
+         */
+        public function cleanUp() : void
+        {
+            try
+            {
+                EntityManager.instance.closeConnection();
+            }
+            catch( e : Error )
+            {
+                // No connection was open
+            }
+            EntityManager.instance.configuration = null;
+        }
+
         [Test]
         /**
          * Instantiates the entity manager.
@@ -86,18 +100,18 @@ package com.alkiteb.flexine.api
          */
         public function openInCreateMode() : void
         {
+            cleanUp();
             EntityManager.instance.configuration = configCreateMode;
             var openSuccess : Boolean = false;
             try
             {
-                EntityManager.instance.openSyncConnection();
+                EntityManager.instance.openConnection();
                 openSuccess = true;
             }
             catch ( e : Error )
             {
-                openSuccess = false;
+                Assert.assertTrue(openSuccess);
             }
-            Assert.assertTrue(openSuccess);
         }
 
         [Test]
@@ -108,18 +122,18 @@ package com.alkiteb.flexine.api
         {
             for each (var sqlMode : String in[SQLMode.UPDATE, SQLMode.READ])
             {
+                cleanUp();
                 EntityManager.instance.configuration = new SQLConfiguration(File.applicationDirectory.resolvePath("unexisiting_db.db").nativePath, sqlMode);
                 var openSuccess : Boolean = false;
                 try
                 {
-                    EntityManager.instance.openSyncConnection();
+                    EntityManager.instance.openConnection();
                     openSuccess = true;
                 }
                 catch ( e : Error )
                 {
-                    openSuccess = false;
+                    Assert.assertFalse(openSuccess);
                 }
-                Assert.assertFalse(openSuccess);
             }
         }
 
@@ -131,18 +145,36 @@ package com.alkiteb.flexine.api
         {
             for each (var config : SQLConfiguration in[configUpdateMode, configReadMode])
             {
+                cleanUp();
                 EntityManager.instance.configuration = config;
                 var openSuccess : Boolean = false;
                 try
                 {
-                    EntityManager.instance.openSyncConnection();
+                    EntityManager.instance.openConnection();
                     openSuccess = true;
                 }
                 catch ( e : Error )
                 {
-                    openSuccess = false;
+                    Assert.assertTrue(openSuccess);
                 }
-                Assert.assertTrue(openSuccess);
+
+            }
+        }
+
+        [Test]
+        /**
+         * Tries to open existing databases in read and update modes.
+         */
+        public function openWithoutConfiguration() : void
+        {
+            cleanUp();
+            try
+            {
+                EntityManager.instance.openConnection();
+            }
+            catch ( e : Error )
+            {
+                Assert.assertTrue(e is ConfigurationError);
             }
         }
 
