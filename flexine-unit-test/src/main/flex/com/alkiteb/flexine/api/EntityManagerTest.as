@@ -19,12 +19,12 @@ package com.alkiteb.flexine.api
     import com.alkiteb.flexine.EntityManager;
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
-    
+
     import flash.data.SQLMode;
     import flash.filesystem.File;
-    
+
     import flashx.textLayout.operations.RedoOperation;
-    
+
     import flexunit.framework.Assert;
 
     public class EntityManagerTest
@@ -78,7 +78,7 @@ package com.alkiteb.flexine.api
             {
                 EntityManager.instance.closeConnection();
             }
-            catch( e : Error )
+            catch ( e : Error )
             {
                 // No connection was open
             }
@@ -176,6 +176,20 @@ package com.alkiteb.flexine.api
             {
                 Assert.assertTrue(e is ConfigurationError);
             }
+        }
+
+        [Test]
+        /**
+         * Test a database openeing the closing process
+         */
+        public function closeConnection() : void
+        {
+            var success : Boolean = false;
+            EntityManager.instance.configuration = configReadMode;
+            EntityManager.instance.openConnection();
+            EntityManager.instance.closeConnection();
+            success = true;
+            Assert.assertTrue(success);
         }
 
     }
