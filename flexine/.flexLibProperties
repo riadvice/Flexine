@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.alkiteb.flexine.sql.SQL"/>
+    <classEntry path="com.alkiteb.flexine.EntityManager"/>
+    <classEntry path="com.alkiteb.flexine.entity.Entity"/>
+    <classEntry path="com.alkiteb.flexine.mapping.Table"/>
+    <classEntry path="com.alkiteb.flexine.mapping.Column"/>
+    <classEntry path="com.alkiteb.flexine.sql.SQLTypes"/>
+    <classEntry path="com.alkiteb.flexine.config.SQLConfiguration"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
