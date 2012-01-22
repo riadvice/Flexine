@@ -19,8 +19,11 @@ package com.alkiteb.flexine
 
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
-
+    import com.alkiteb.flexine.metadata.registry.FlexineMetadataRegistry;
+    
     import flash.filesystem.File;
+    
+    import mx.collections.ArrayCollection;
 
     public class EntityManager
     {
@@ -29,6 +32,8 @@ package com.alkiteb.flexine
         private static var _instance : EntityManager;
 
         private static var localInstantiation : Boolean;
+        
+        private static var _metadataRegistry : FlexineMetadataRegistry;
 
         public function EntityManager()
         {
@@ -44,6 +49,7 @@ package com.alkiteb.flexine
             {
                 localInstantiation = true;
                 _instance = new EntityManager();
+                _metadataRegistry = new FlexineMetadataRegistry();
                 localInstantiation = false;
             }
             return _instance;
@@ -104,6 +110,13 @@ package com.alkiteb.flexine
         public function rollback() : void
         {
             _config.connection.rollback();
+        }
+
+        public function findAll( entity : Class ) : ArrayCollection
+        {
+            var result : ArrayCollection = new ArrayCollection();
+            var ent : Object = _metadataRegistry.process(entity);
+            return result;
         }
 
     }

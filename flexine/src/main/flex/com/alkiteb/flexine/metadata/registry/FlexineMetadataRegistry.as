@@ -14,37 +14,25 @@
    You should have received a copy of the GNU General Public License
    along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alkiteb.flexine.config
+package com.alkiteb.flexine.metadata.registry
 {
-    import flash.data.SQLConnection;
+    import com.alkiteb.flexine.metadata.process.TableMetadateProcessor;
 
-    public class SQLConfiguration
+    import org.as3commons.metadata.registry.impl.AS3ReflectMetadataProcessorRegistry;
+
+    public class FlexineMetadataRegistry extends AS3ReflectMetadataProcessorRegistry
     {
-        private var _connection : SQLConnection;
-        private var _dbPath : String;
-        private var _sqlMode : String;
 
-        public function SQLConfiguration( dbPath : String, sqlMode : String )
+        public function FlexineMetadataRegistry()
         {
-            // TODO : add isTransactional
-            _connection = new SQLConnection();
-            _dbPath = dbPath;
-            _sqlMode = sqlMode;
+            super();
+            addProcessor(new TableMetadateProcessor(this));
         }
 
-        public function get connection() : SQLConnection
+        override public function process( target : Object, params : Array = null ) : *
         {
-            return _connection;
+            super.process(target, params);
         }
 
-        public function get dbPath() : String
-        {
-            return _dbPath;
-        }
-
-        public function get sqlMode() : String
-        {
-            return _sqlMode;
-        }
     }
 }

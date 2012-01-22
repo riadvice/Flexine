@@ -16,8 +16,38 @@
  */
 package com.alkiteb.flexine.config
 {
+    import com.alkiteb.flexine.entity.Entity;
+
+    import flash.utils.Dictionary;
+
+    import org.as3commons.lang.DictionaryUtils;
 
     public class EntitiesCache
     {
+        private static var _cachedEntities : Dictionary = new Dictionary(true);
+
+        /**
+         * Returns true if the class metadata was already scanned.
+         */
+        public static function isCached( clazz : Class ) : Boolean
+        {
+            return DictionaryUtils.containsKey(_cachedEntities, clazz);
+        }
+
+        /**
+         * Caches a scanned entity
+         */
+        public static function cacheEntity( entity : Entity ) : void
+        {
+            _cachedEntities[entity.clazz] = entity;
+        }
+
+        /**
+         * Removes a scanned entity from entities cache.
+         */
+        public static function deleteEntity( entity : Entity ) : void
+        {
+            delete _cachedEntities[entity.clazz];
+        }
     }
 }

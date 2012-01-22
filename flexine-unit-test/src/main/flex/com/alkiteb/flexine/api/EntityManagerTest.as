@@ -19,10 +19,12 @@ package com.alkiteb.flexine.api
     import com.alkiteb.flexine.EntityManager;
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
-
+    import com.alkiteb.flexine.models.generic.StringModel;
+    
     import flash.data.SQLMode;
     import flash.filesystem.File;
-
+    import flash.net.registerClassAlias;
+    
     import flexunit.framework.Assert;
 
     public class EntityManagerTest
@@ -39,6 +41,7 @@ package com.alkiteb.flexine.api
         [Before]
         public function setUp() : void
         {
+            registerClasses();
             try
             {
                 File.applicationDirectory.resolvePath(createDB).deleteFile();
@@ -81,6 +84,11 @@ package com.alkiteb.flexine.api
                 // No connection was open
             }
             EntityManager.instance.configuration = null;
+        }
+        
+        public function registerClasses() : void
+        {
+            StringModel;
         }
 
         [Test]
@@ -166,6 +174,7 @@ package com.alkiteb.flexine.api
         {
             try
             {
+                cleanUp();
                 EntityManager.instance.openConnection();
             }
             catch ( e : Error )
@@ -205,6 +214,15 @@ package com.alkiteb.flexine.api
             EntityManager.instance.rollback();
             transactionProcessed = true;
             Assert.assertTrue(transactionProcessed);
+            cleanUp();
+        }
+        
+        [Test]
+        public function findAll() : void
+        {
+            EntityManager.instance.configuration = configReadMode;
+            EntityManager.instance.openConnection();
+            EntityManager.instance.findAll(StringModel);
             cleanUp();
         }
 

@@ -21,15 +21,26 @@ package com.alkiteb.flexine.entity
     public class Entity
     {
         private var _table : Table;
+        private var _clazz : Class;
 
-        public function get table():Table
+        public function get table() : Table
         {
             return _table;
         }
 
-        public function set table(value:Table):void
+        public function set table( value : Table ) : void
         {
             _table = value;
+        }
+
+        public function get clazz() : Class
+        {
+            return _clazz;
+        }
+
+        public function set clazz( value : Class ) : void
+        {
+            _clazz = value;
         }
 
     }
