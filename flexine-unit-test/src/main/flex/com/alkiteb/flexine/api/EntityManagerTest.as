@@ -23,8 +23,6 @@ package com.alkiteb.flexine.api
     import flash.data.SQLMode;
     import flash.filesystem.File;
 
-    import flashx.textLayout.operations.RedoOperation;
-
     import flexunit.framework.Assert;
 
     public class EntityManagerTest
@@ -100,7 +98,6 @@ package com.alkiteb.flexine.api
          */
         public function openInCreateMode() : void
         {
-            cleanUp();
             EntityManager.instance.configuration = configCreateMode;
             var openSuccess : Boolean = false;
             try
@@ -112,6 +109,7 @@ package com.alkiteb.flexine.api
             {
                 Assert.assertTrue(openSuccess);
             }
+            cleanUp();
         }
 
         [Test]
@@ -122,7 +120,6 @@ package com.alkiteb.flexine.api
         {
             for each (var sqlMode : String in[SQLMode.UPDATE, SQLMode.READ])
             {
-                cleanUp();
                 EntityManager.instance.configuration = new SQLConfiguration(File.applicationDirectory.resolvePath("unexisiting_db.db").nativePath, sqlMode);
                 var openSuccess : Boolean = false;
                 try
@@ -134,6 +131,7 @@ package com.alkiteb.flexine.api
                 {
                     Assert.assertFalse(openSuccess);
                 }
+                cleanUp();
             }
         }
 
@@ -145,7 +143,6 @@ package com.alkiteb.flexine.api
         {
             for each (var config : SQLConfiguration in[configUpdateMode, configReadMode])
             {
-                cleanUp();
                 EntityManager.instance.configuration = config;
                 var openSuccess : Boolean = false;
                 try
@@ -157,7 +154,7 @@ package com.alkiteb.flexine.api
                 {
                     Assert.assertTrue(openSuccess);
                 }
-
+                cleanUp();
             }
         }
 
@@ -167,7 +164,6 @@ package com.alkiteb.flexine.api
          */
         public function openWithoutConfiguration() : void
         {
-            cleanUp();
             try
             {
                 EntityManager.instance.openConnection();
@@ -176,11 +172,12 @@ package com.alkiteb.flexine.api
             {
                 Assert.assertTrue(e is ConfigurationError);
             }
+            cleanUp();
         }
 
         [Test]
         /**
-         * Test a database openeing the closing process
+         * Tests a database opening the closing process
          */
         public function closeConnection() : void
         {
@@ -190,6 +187,25 @@ package com.alkiteb.flexine.api
             EntityManager.instance.closeConnection();
             success = true;
             Assert.assertTrue(success);
+            cleanUp();
+        }
+
+        [Test]
+        /**
+         * Tries a full transactional process
+         */
+        public function transactionProcess() : void
+        {
+            var transactionProcessed : Boolean = false;
+            EntityManager.instance.configuration = configReadMode;
+            EntityManager.instance.openConnection();
+            EntityManager.instance.beginTransaction();
+            EntityManager.instance.commit();
+            EntityManager.instance.beginTransaction();
+            EntityManager.instance.rollback();
+            transactionProcessed = true;
+            Assert.assertTrue(transactionProcessed);
+            cleanUp();
         }
 
     }

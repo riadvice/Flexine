@@ -19,7 +19,7 @@ package com.alkiteb.flexine
 
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
-    
+
     import flash.filesystem.File;
 
     public class EntityManager
@@ -64,16 +64,16 @@ package com.alkiteb.flexine
         public function openConnection() : void
         {
             // TODO : add async mode
-            if ( _config )
+            if (_config)
             {
                 _config.connection.open(new File(_config.dbPath), _config.sqlMode);
             }
             else
             {
-                throw new ConfigurationError( "noConfiguration" );
+                throw new ConfigurationError("noConfiguration");
             }
         }
-        
+
         /**
          * Closes a connection to the database.
          */
@@ -81,5 +81,30 @@ package com.alkiteb.flexine
         {
             _config.connection.close();
         }
+
+        /**
+         * Starts a transaction on the underlying database connection.
+         */
+        public function beginTransaction() : void
+        {
+            _config.connection.begin();
+        }
+
+        /**
+         * Commits a transaction on the underlying database connection.
+         */
+        public function commit() : void
+        {
+            _config.connection.commit();
+        }
+
+        /**
+         * Performs a rollback on the underlying database connection.
+         */
+        public function rollback() : void
+        {
+            _config.connection.rollback();
+        }
+
     }
 }
