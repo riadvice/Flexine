@@ -16,22 +16,29 @@
  */
 package com.alkiteb.flexine.metadata.registry
 {
+    import com.alkiteb.flexine.entity.Entity;
     import com.alkiteb.flexine.metadata.process.TableMetadateProcessor;
-
+    
     import org.as3commons.metadata.registry.impl.AS3ReflectMetadataProcessorRegistry;
 
     public class FlexineMetadataRegistry extends AS3ReflectMetadataProcessorRegistry
     {
+        private var _entity : Entity;
+        private var _tableMetadateProcessor : TableMetadateProcessor;
 
         public function FlexineMetadataRegistry()
         {
             super();
-            addProcessor(new TableMetadateProcessor(this));
+            addProcessor(_tableMetadateProcessor = new TableMetadateProcessor(this));
         }
 
         override public function process( target : Object, params : Array = null ) : *
         {
+            _entity = new Entity();
             super.process(target, params);
+            _entity.clazz = target as Class;
+            _entity.table = _tableMetadateProcessor.table;
+            return _entity;
         }
 
     }

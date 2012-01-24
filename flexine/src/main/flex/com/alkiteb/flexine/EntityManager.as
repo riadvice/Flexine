@@ -18,8 +18,11 @@ package com.alkiteb.flexine
 {
 
     import com.alkiteb.flexine.config.SQLConfiguration;
+    import com.alkiteb.flexine.entity.Entity;
     import com.alkiteb.flexine.errors.ConfigurationError;
     import com.alkiteb.flexine.metadata.registry.FlexineMetadataRegistry;
+    import com.alkiteb.flexine.query.SelectQuery;
+    import com.alkiteb.flexine.util.ResultConverter;
     
     import flash.filesystem.File;
     
@@ -115,8 +118,10 @@ package com.alkiteb.flexine
         public function findAll( entity : Class ) : ArrayCollection
         {
             var result : ArrayCollection = new ArrayCollection();
-            var ent : Object = _metadataRegistry.process(entity);
-            return result;
+            var ent : Entity = _metadataRegistry.process(entity) as Entity;
+            var selectAllQuery : SelectQuery = new SelectQuery(_config, ent.table.name);
+            selectAllQuery.execute();
+            return ResultConverter.convertToCollection(selectAllQuery.result, ent);
         }
 
     }

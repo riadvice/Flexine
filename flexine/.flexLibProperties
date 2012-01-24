@@ -13,6 +13,10 @@
     <classEntry path="com.alkiteb.flexine.metadata.process.TableMetadateProcessor"/>
     <classEntry path="com.alkiteb.flexine.metadata.registry.FlexineMetadataRegistry"/>
     <classEntry path="com.alkiteb.flexine.metadata.process.FlexineMetadataProcessor"/>
+    <classEntry path="com.alkiteb.flexine.util.Inflector"/>
+    <classEntry path="com.alkiteb.flexine.query.SQLQuery"/>
+    <classEntry path="com.alkiteb.flexine.util.ResultConverter"/>
+    <classEntry path="com.alkiteb.flexine.query.SelectQuery"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

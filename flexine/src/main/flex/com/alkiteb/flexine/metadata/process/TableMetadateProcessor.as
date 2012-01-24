@@ -17,9 +17,9 @@
 package com.alkiteb.flexine.metadata.process
 {
     import com.alkiteb.flexine.mapping.Table;
-    
+
     import flash.system.ApplicationDomain;
-    
+
     import org.as3commons.metadata.registry.IMetadataProcessorRegistry;
     import org.as3commons.reflect.Metadata;
     import org.as3commons.reflect.MetadataArgument;
@@ -44,7 +44,7 @@ package com.alkiteb.flexine.metadata.process
             {
                 _table[argument.key] = argument.value;
             }
-            // TODO : auto-name table if not set by the user
+            // TODO : auto-name table if not set by the user using Inflector
         }
 
         public function get table() : Table

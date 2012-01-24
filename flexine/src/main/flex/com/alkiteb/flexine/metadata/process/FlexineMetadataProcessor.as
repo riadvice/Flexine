@@ -17,7 +17,7 @@
 package com.alkiteb.flexine.metadata.process
 {
     import flash.system.ApplicationDomain;
-    
+
     import org.as3commons.metadata.process.impl.AbstractMetadataProcessor;
     import org.as3commons.metadata.registry.IMetadataProcessorRegistry;
     import org.as3commons.reflect.Type;
