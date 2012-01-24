@@ -20,12 +20,16 @@ package com.alkiteb.flexine.api
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
     import com.alkiteb.flexine.models.generic.StringModel;
-    
+
+    import flash.data.SQLConnection;
     import flash.data.SQLMode;
+    import flash.data.SQLStatement;
     import flash.filesystem.File;
     import flash.net.registerClassAlias;
-    
+
     import flexunit.framework.Assert;
+
+    import mx.collections.ArrayCollection;
 
     public class EntityManagerTest
     {
@@ -34,9 +38,13 @@ package com.alkiteb.flexine.api
         private var configUpdateMode : SQLConfiguration;
         private var configReadMode : SQLConfiguration;
 
+        private var configGenericDb : SQLConfiguration;
+
         private var createDB : String = "api_create_test.db";
         private var updateDB : String = "api_update_test.db";
         private var readDB : String = "api_read_test.db";
+
+        private var genericDB : String = "generic_db_test.db";
 
         [Before]
         public function setUp() : void
@@ -53,6 +61,8 @@ package com.alkiteb.flexine.api
             configCreateMode = new SQLConfiguration(File.applicationDirectory.resolvePath(createDB).nativePath, SQLMode.CREATE);
             configUpdateMode = new SQLConfiguration(File.applicationDirectory.resolvePath(updateDB).nativePath, SQLMode.UPDATE);
             configReadMode = new SQLConfiguration(File.applicationDirectory.resolvePath(readDB).nativePath, SQLMode.READ);
+
+            configGenericDb = new SQLConfiguration(File.applicationDirectory.resolvePath(genericDB).nativePath, SQLMode.CREATE)
         }
 
         [After]
@@ -85,10 +95,27 @@ package com.alkiteb.flexine.api
             }
             EntityManager.instance.configuration = null;
         }
-        
+
         public function registerClasses() : void
         {
             StringModel;
+        }
+
+        public function prepareSimpleTable( connection : SQLConnection ) : void
+        {
+            for each (var query : String in["DROP TABLE IF EXISTS main.string_table",
+                "CREATE TABLE IF NOT EXISTS main.string_table (name TEXT)",
+                "INSERT INTO main.string_table values('hello')",
+                "INSERT INTO main.string_table values('world');"])
+            {
+                var stmt : SQLStatement = new SQLStatement();
+                stmt.sqlConnection = connection;
+                stmt.sqlConnection.begin();
+                stmt.text = query;
+                stmt.execute();
+                stmt.sqlConnection.commit();
+            }
+
         }
 
         [Test]
@@ -216,13 +243,19 @@ package com.alkiteb.flexine.api
             Assert.assertTrue(transactionProcessed);
             cleanUp();
         }
-        
+
         [Test]
         public function findAll() : void
         {
-            EntityManager.instance.configuration = configReadMode;
+            EntityManager.instance.configuration = configGenericDb;
             EntityManager.instance.openConnection();
-            EntityManager.instance.findAll(StringModel);
+            prepareSimpleTable(configGenericDb.connection);
+            var result : ArrayCollection = EntityManager.instance.findAll(StringModel);
+            Assert.assertEquals(result.length, 2);
+            Assert.assertTrue(result.getItemAt(0) is StringModel);
+            Assert.assertTrue(result.getItemAt(1) is StringModel);
+            Assert.assertEquals(result.getItemAt(0).name, 'hello');
+            Assert.assertEquals(result.getItemAt(1).name, 'world');
             cleanUp();
         }
 
