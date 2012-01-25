@@ -17,6 +17,7 @@
 package com.alkiteb.flexine.metadata.process
 {
     import com.alkiteb.flexine.mapping.Table;
+    import com.alkiteb.flexine.util.MetadataUtils;
 
     import flash.system.ApplicationDomain;
 
@@ -38,12 +39,9 @@ package com.alkiteb.flexine.metadata.process
 
         override public function process( target : Object, metadataName : String, params : Array = null ) : *
         {
-            var tableMetadata : Metadata = super.process(target, metadataName, params)[0];
-            _table = new Table();
-            for each (var argument : MetadataArgument in tableMetadata.arguments)
-            {
-                _table[argument.key] = argument.value;
-            }
+            var tableMetadatas : Array = super.process(target, metadataName, params);
+            _table = MetadataUtils.fillObjectFromMetadata(tableMetadatas, METADATA_NAME, Table);
+            _table.schema ||= "main";
             // TODO : auto-name table if not set by the user using Inflector
         }
 

@@ -16,29 +16,52 @@
  */
 package com.alkiteb.flexine.metadata.registry
 {
+    import com.alkiteb.flexine.config.EntitiesCache;
     import com.alkiteb.flexine.entity.Entity;
+    import com.alkiteb.flexine.metadata.process.ColumnMetadataProcessor;
     import com.alkiteb.flexine.metadata.process.TableMetadateProcessor;
-    
+
     import org.as3commons.metadata.registry.impl.AS3ReflectMetadataProcessorRegistry;
+    import org.as3commons.reflect.Type;
 
     public class FlexineMetadataRegistry extends AS3ReflectMetadataProcessorRegistry
     {
         private var _entity : Entity;
-        private var _tableMetadateProcessor : TableMetadateProcessor;
+        private var _tableMetadataProcessor : TableMetadateProcessor;
+        private var _columnMetadataProcessor : ColumnMetadataProcessor;
 
         public function FlexineMetadataRegistry()
         {
             super();
-            addProcessor(_tableMetadateProcessor = new TableMetadateProcessor(this));
+            addProcessor(_tableMetadataProcessor = new TableMetadateProcessor(this));
+            _columnMetadataProcessor = new ColumnMetadataProcessor();
         }
 
         override public function process( target : Object, params : Array = null ) : *
         {
-            _entity = new Entity();
-            super.process(target, params);
-            _entity.clazz = target as Class;
-            _entity.table = _tableMetadateProcessor.table;
+            // First we try to find if the class entity was already cached
+            _entity = getEntityByClass(target as Class);
+            if (!_entity)
+            {
+                // Else we scan the class metadata
+                super.process(target, params);
+                var type : Type = Type.forInstance(target, super.applicationDomain);
+
+                _entity = new Entity();
+                _entity.clazz = target as Class;
+                _entity.table = _tableMetadataProcessor.table;
+                _entity.columns = _columnMetadataProcessor.processColumns(target, [type]);
+                EntitiesCache.cacheEntity(_entity);
+            }
             return _entity;
+        }
+
+        /**
+         * Returns the entity of class.
+         */
+        public function getEntityByClass( clazz : Class ) : Entity
+        {
+            return EntitiesCache.getEntity(clazz);
         }
 
     }

@@ -22,6 +22,7 @@ package com.alkiteb.flexine.entity
     {
         private var _table : Table;
         private var _clazz : Class;
+        private var _columns : Array;
 
         public function get table() : Table
         {
@@ -41,6 +42,16 @@ package com.alkiteb.flexine.entity
         public function set clazz( value : Class ) : void
         {
             _clazz = value;
+        }
+        
+        public function get columns():Array
+        {
+            return _columns;
+        }
+        
+        public function set columns(value:Array):void
+        {
+            _columns = value;
         }
 
     }

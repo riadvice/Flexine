@@ -17,8 +17,10 @@
 package com.alkiteb.flexine.mapping
 {
 
-    public class Table
+    public final class Table
     {
         public var name : String;
+
+        public var schema : String;
     }
 }

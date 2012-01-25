@@ -17,6 +17,9 @@
     <classEntry path="com.alkiteb.flexine.query.SQLQuery"/>
     <classEntry path="com.alkiteb.flexine.util.ResultConverter"/>
     <classEntry path="com.alkiteb.flexine.query.SelectQuery"/>
+    <classEntry path="com.alkiteb.flexine.mapping.PrimaryKey"/>
+    <classEntry path="com.alkiteb.flexine.metadata.process.ColumnMetadataProcessor"/>
+    <classEntry path="com.alkiteb.flexine.util.MetadataUtils"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

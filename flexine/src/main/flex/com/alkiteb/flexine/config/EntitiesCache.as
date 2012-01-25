@@ -17,11 +17,12 @@
 package com.alkiteb.flexine.config
 {
     import com.alkiteb.flexine.entity.Entity;
-
+    
     import flash.utils.Dictionary;
-
+    
     import org.as3commons.lang.DictionaryUtils;
 
+    [ExcludeClass]
     public class EntitiesCache
     {
         private static var _cachedEntities : Dictionary = new Dictionary(true);
@@ -48,6 +49,14 @@ package com.alkiteb.flexine.config
         public static function deleteEntity( entity : Entity ) : void
         {
             delete _cachedEntities[entity.clazz];
+        }
+        
+        /**
+         * Returns a cached entity.
+         */
+        public static function getEntity( clazz : Class ) : Entity
+        {
+            return _cachedEntities[clazz];
         }
     }
 }

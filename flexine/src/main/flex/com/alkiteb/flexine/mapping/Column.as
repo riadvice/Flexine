@@ -16,14 +16,13 @@
  */
 package com.alkiteb.flexine.mapping
 {
-    import com.alkiteb.flexine.sql.SQLTypes;
 
-    public class Column
+    public final class Column
     {
         public var name : String;
 
-        public var type : String = SQLTypes.STRING;
+        public var type : String;
 
-        public var length : int;
+        public var property : String;
     }
 }
