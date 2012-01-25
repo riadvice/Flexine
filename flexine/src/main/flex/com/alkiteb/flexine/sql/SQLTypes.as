@@ -21,12 +21,45 @@ package com.alkiteb.flexine.sql
     {
         public static const BOOLEAN : String = "Boolean";
         public static const DATE : String = "Date";
-        public static const INT : String = "Integer";
+        public static const INTEGER : String = "Integer";
         public static const NUMBER : String = "Real";
         public static const OBJECT : String = "Object";
         public static const STRING : String = "String";
         public static const XML : String = "XML";
         public static const XMLLIST : String = "XMLList";
+
+        /**
+         * Returns the corresponding SQL type to the ActionScript type
+         */
+        public static function getSQLType( asType : String ) : String
+        {
+            switch (asType)
+            {
+                case "int" || "uint":
+                    return INTEGER;
+                    break;
+                case "String":
+                    return STRING;
+                    break;
+                case "Number":
+                    return NUMBER;
+                    break;
+                case "Date":
+                    return DATE;
+                    break;
+                case "Boolean":
+                    return BOOLEAN;
+                    break;
+                case "XML":
+                    return XML;
+                    break;
+                case "XMLList":
+                    return XMLLIST;
+                    break;
+                default:
+                    return OBJECT;
+            }
+        }
 
     }
 }
