@@ -23,9 +23,9 @@ package com.alkiteb.flexine
     import com.alkiteb.flexine.metadata.registry.FlexineMetadataRegistry;
     import com.alkiteb.flexine.query.SelectQuery;
     import com.alkiteb.flexine.util.ResultConverter;
-    
+
     import flash.filesystem.File;
-    
+
     import mx.collections.ArrayCollection;
 
     public class EntityManager
@@ -35,7 +35,7 @@ package com.alkiteb.flexine
         private static var _instance : EntityManager;
 
         private static var localInstantiation : Boolean;
-        
+
         private static var _metadataRegistry : FlexineMetadataRegistry;
 
         public function EntityManager()
@@ -115,13 +115,15 @@ package com.alkiteb.flexine
             _config.connection.rollback();
         }
 
-        public function findAll( entity : Class ) : ArrayCollection
+        /**
+         * Finds all records of a table using its mapping class.
+         */
+        public function findAll( clazz : Class ) : ArrayCollection
         {
             var result : ArrayCollection = new ArrayCollection();
-            var ent : Entity = _metadataRegistry.process(entity) as Entity;
-            var selectAllQuery : SelectQuery = new SelectQuery(_config, ent.table.name);
+            var selectAllQuery : SelectQuery = new SelectQuery(_config, _metadataRegistry.process(clazz));
             selectAllQuery.execute();
-            return ResultConverter.convertToCollection(selectAllQuery.result, ent);
+            return ResultConverter.convertToCollection(selectAllQuery.result, _metadataRegistry.getEntityByClass(clazz));
         }
 
     }

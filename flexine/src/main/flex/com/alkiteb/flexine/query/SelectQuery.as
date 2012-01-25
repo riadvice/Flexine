@@ -17,20 +17,21 @@
 package com.alkiteb.flexine.query
 {
     import com.alkiteb.flexine.config.SQLConfiguration;
+    import com.alkiteb.flexine.entity.Entity;
     import com.alkiteb.flexine.sql.SQL;
 
     public class SelectQuery extends SQLQuery
     {
         private var _distinct : Boolean = false;
 
-        public function SelectQuery( sqlConfiguration : SQLConfiguration, table : String )
+        public function SelectQuery( sqlConfiguration : SQLConfiguration, entity : Entity )
         {
-            super(sqlConfiguration, table);
+            super(sqlConfiguration, entity);
         }
 
         override public function prepareStatement() : void
         {
-            _statement.text = [SQL.SELECT, !_distinct ? SQL.ALL : SQL.DISTINCT, columns, SQL.FROM, _table].join(" ") + ";";
+            _statement.text = [SQL.SELECT, !_distinct ? SQL.ALL : SQL.DISTINCT, columns, SQL.FROM, tableName ].join(" ") + ";";
         }
 
         public function get columns() : String
