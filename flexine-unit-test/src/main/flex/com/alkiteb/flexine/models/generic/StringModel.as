@@ -16,10 +16,22 @@
  */
 package com.alkiteb.flexine.models.generic
 {
+    import com.alkiteb.flexine.sql.SQLTypes;
 
-    [Table(name="string_table")]
+    [Table(name = "string_table")]
     public class StringModel
     {
-        public var name;
+        [Column]
+        public var name : String;
+
+        [Column(name = "last_name")]
+        public var lastName : String;
+
+        [Column(name = "xml_data", type = SQLTypes.XML)]
+        public var simpleXML : XML;
+        
+        public var sent_date : Date;
+
+        public var active : Boolean;
     }
 }
