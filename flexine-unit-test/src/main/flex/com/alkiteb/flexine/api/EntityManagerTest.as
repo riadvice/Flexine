@@ -48,7 +48,6 @@ package com.alkiteb.flexine.api
         [Before]
         public function setUp() : void
         {
-            registerClasses();
             try
             {
                 File.applicationDirectory.resolvePath(createDB).deleteFile();
@@ -62,6 +61,7 @@ package com.alkiteb.flexine.api
             configReadMode = new SQLConfiguration(File.applicationDirectory.resolvePath(readDB).nativePath, SQLMode.READ);
 
             configGenericDb = new SQLConfiguration(File.applicationDirectory.resolvePath(genericDB).nativePath, SQLMode.CREATE)
+            configGenericDb.persistencePackage = "com.alkiteb.flexine.models.generic"
         }
 
         [After]
@@ -82,45 +82,21 @@ package com.alkiteb.flexine.api
         /**
          * Cleans up the configuration before each test run
          */
-        public function cleanUp() : void
+        public function cleanUp( removeFile : Boolean = false ) : void
         {
             try
             {
                 EntityManager.instance.closeConnection();
+                if (removeFile)
+                {
+                    new File(EntityManager.instance.configuration.dbPath).deleteFile();
+                }
             }
             catch ( e : Error )
             {
                 // No connection was open
             }
             EntityManager.instance.configuration = null;
-        }
-
-        public function registerClasses() : void
-        {
-            StringModel;
-        }
-
-        public function prepareSimpleTable( connection : SQLConnection ) : void
-        {
-            /* OLD Queries to update
-
-               "CREATE TABLE IF NOT EXISTS main.string_table (name TEXT)",
-               "INSERT INTO main.string_table values('hello')",
-               "INSERT INTO main.string_table values('world');"
-
-             */
-            for each (var query : String in["DROP TABLE IF EXISTS main.string_table",])
-            {
-                "INSERT INTO main.string_table (name) values('world');"
-            }
-            {
-                var stmt : SQLStatement = new SQLStatement();
-                stmt.sqlConnection = connection;
-                stmt.sqlConnection.begin();
-                stmt.text = query;
-                stmt.execute();
-                stmt.sqlConnection.commit();
-            }
         }
 
         public function addEntries( connection : SQLConnection ) : void
@@ -269,7 +245,7 @@ package com.alkiteb.flexine.api
             EntityManager.instance.configuration = configGenericDb;
             EntityManager.instance.openConnection();
             // FIXME : update test after adding save and create methods in EntityManager
-            prepareSimpleTable(configGenericDb.connection);
+            // prepareSimpleTable(configGenericDb.connection);
             EntityManager.instance.findAll(StringModel);
             addEntries(configGenericDb.connection)
             var result : ArrayCollection = EntityManager.instance.findAll(StringModel);
@@ -278,7 +254,7 @@ package com.alkiteb.flexine.api
             Assert.assertTrue(result.getItemAt(1) is StringModel);
             Assert.assertEquals(result.getItemAt(0).name, 'hello');
             Assert.assertEquals(result.getItemAt(1).name, 'world');
-            cleanUp();
+            cleanUp(true);
         }
 
     }
