@@ -20,6 +20,7 @@
     <classEntry path="com.alkiteb.flexine.mapping.PrimaryKey"/>
     <classEntry path="com.alkiteb.flexine.metadata.process.ColumnMetadataProcessor"/>
     <classEntry path="com.alkiteb.flexine.util.MetadataUtils"/>
+    <classEntry path="com.alkiteb.flexine.query.CreateTableQuery"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

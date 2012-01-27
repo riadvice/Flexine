@@ -18,7 +18,7 @@ package com.alkiteb.flexine.query
 {
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.entity.Entity;
-    
+
     import flash.data.SQLConnection;
     import flash.data.SQLResult;
     import flash.data.SQLStatement;
@@ -28,7 +28,7 @@ package com.alkiteb.flexine.query
         protected var _statement : SQLStatement;
 
         protected var _sqlConnection : SQLConnection;
-        
+
         protected var _entity : Entity;
 
         public function SQLQuery( sqlConfiguration : SQLConfiguration, entity : Entity )
@@ -52,7 +52,7 @@ package com.alkiteb.flexine.query
         {
             return _statement.getResult();
         }
-        
+
         public function get tableName() : String
         {
             return [_entity.table.schema, _entity.table.name].join(".");
@@ -60,7 +60,7 @@ package com.alkiteb.flexine.query
 
         public function toString() : String
         {
-            return null
+            return _statement.text;
         }
 
     }

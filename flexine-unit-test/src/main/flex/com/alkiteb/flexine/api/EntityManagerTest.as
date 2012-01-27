@@ -25,7 +25,6 @@ package com.alkiteb.flexine.api
     import flash.data.SQLMode;
     import flash.data.SQLStatement;
     import flash.filesystem.File;
-    import flash.net.registerClassAlias;
 
     import flexunit.framework.Assert;
 
@@ -103,10 +102,17 @@ package com.alkiteb.flexine.api
 
         public function prepareSimpleTable( connection : SQLConnection ) : void
         {
-            for each (var query : String in["DROP TABLE IF EXISTS main.string_table",
-                "CREATE TABLE IF NOT EXISTS main.string_table (name TEXT)",
-                "INSERT INTO main.string_table values('hello')",
-                "INSERT INTO main.string_table values('world');"])
+            /* OLD Queries to update
+
+               "CREATE TABLE IF NOT EXISTS main.string_table (name TEXT)",
+               "INSERT INTO main.string_table values('hello')",
+               "INSERT INTO main.string_table values('world');"
+
+             */
+            for each (var query : String in["DROP TABLE IF EXISTS main.string_table",])
+            {
+                "INSERT INTO main.string_table (name) values('world');"
+            }
             {
                 var stmt : SQLStatement = new SQLStatement();
                 stmt.sqlConnection = connection;
@@ -115,7 +121,20 @@ package com.alkiteb.flexine.api
                 stmt.execute();
                 stmt.sqlConnection.commit();
             }
+        }
 
+        public function addEntries( connection : SQLConnection ) : void
+        {
+            for each (var query : String in["INSERT INTO main.string_table (name) values('hello')",
+                "INSERT INTO main.string_table (name) values('world');"])
+            {
+                var stmt : SQLStatement = new SQLStatement();
+                stmt.sqlConnection = connection;
+                stmt.sqlConnection.begin();
+                stmt.text = query;
+                stmt.execute();
+                stmt.sqlConnection.commit();
+            }
         }
 
         [Test]
@@ -249,7 +268,10 @@ package com.alkiteb.flexine.api
         {
             EntityManager.instance.configuration = configGenericDb;
             EntityManager.instance.openConnection();
+            // FIXME : update test after adding save and create methods in EntityManager
             prepareSimpleTable(configGenericDb.connection);
+            EntityManager.instance.findAll(StringModel);
+            addEntries(configGenericDb.connection)
             var result : ArrayCollection = EntityManager.instance.findAll(StringModel);
             Assert.assertEquals(result.length, 2);
             Assert.assertTrue(result.getItemAt(0) is StringModel);

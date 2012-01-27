@@ -31,7 +31,7 @@ package com.alkiteb.flexine.query
 
         override public function prepareStatement() : void
         {
-            _statement.text = [SQL.SELECT, !_distinct ? SQL.ALL : SQL.DISTINCT, columns, SQL.FROM, tableName ].join(" ") + ";";
+            _statement.text = [SQL.SELECT, !_distinct ? SQL.ALL : SQL.DISTINCT, columns, SQL.FROM, tableName].join(" ") + ";";
         }
 
         public function get columns() : String

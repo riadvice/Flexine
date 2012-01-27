@@ -17,9 +17,13 @@
 package com.alkiteb.flexine.metadata.registry
 {
     import com.alkiteb.flexine.config.EntitiesCache;
+    import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.entity.Entity;
     import com.alkiteb.flexine.metadata.process.ColumnMetadataProcessor;
     import com.alkiteb.flexine.metadata.process.TableMetadateProcessor;
+    import com.alkiteb.flexine.query.CreateTableQuery;
+
+    import flash.data.SQLMode;
 
     import org.as3commons.metadata.registry.impl.AS3ReflectMetadataProcessorRegistry;
     import org.as3commons.reflect.Type;
@@ -29,6 +33,8 @@ package com.alkiteb.flexine.metadata.registry
         private var _entity : Entity;
         private var _tableMetadataProcessor : TableMetadateProcessor;
         private var _columnMetadataProcessor : ColumnMetadataProcessor;
+
+        private var _createTableQuery : CreateTableQuery;
 
         public function FlexineMetadataRegistry()
         {
@@ -51,6 +57,14 @@ package com.alkiteb.flexine.metadata.registry
                 _entity.clazz = target as Class;
                 _entity.table = _tableMetadataProcessor.table;
                 _entity.columns = _columnMetadataProcessor.processColumns(target, [type]);
+
+                // Creating the table if not exists
+                if (params && params[0] is SQLConfiguration && params[0].sqlMode != SQLMode.READ)
+                {
+                    _createTableQuery = new CreateTableQuery(params[0], _entity);
+                    _createTableQuery.execute();
+                }
+
                 EntitiesCache.cacheEntity(_entity);
             }
             return _entity;
