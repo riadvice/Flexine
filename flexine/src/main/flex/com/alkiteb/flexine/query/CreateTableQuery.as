@@ -23,7 +23,7 @@ package com.alkiteb.flexine.query
 
     public class CreateTableQuery extends SQLQuery
     {
-        private var _ifExists : Boolean;
+        private var _ifExists : Boolean = true;
 
         public function CreateTableQuery( sqlConfiguration : SQLConfiguration, entity : Entity )
         {
