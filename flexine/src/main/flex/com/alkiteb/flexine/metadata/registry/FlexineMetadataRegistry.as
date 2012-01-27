@@ -30,7 +30,7 @@ package com.alkiteb.flexine.metadata.registry
 
     import mx.core.FlexGlobals;
 
-    import org.as3commons.bytecode.reflect.ByteCodeTypeProvider;
+    import org.as3commons.bytecode.reflect.ByteCodeType;
     import org.as3commons.reflect.Accessor;
     import org.as3commons.reflect.Type;
     import org.as3commons.reflect.Variable;
@@ -63,13 +63,10 @@ package com.alkiteb.flexine.metadata.registry
             var packageName : String = sqlConfiguration.persistencePackage;
             if (packageName && _processedPackages.indexOf(packageName) < 0)
             {
-                var loadedClasses : Array = new ByteCodeTypeProvider().definitionNamesFromLoader(FlexGlobals.topLevelApplication.systemManager.loaderInfo);
-                for each (var className : String in loadedClasses)
+                var loadedClasses : Object = ByteCodeType.metaDataLookupFromLoader(FlexGlobals.topLevelApplication.systemManager.loaderInfo);
+                for each (var className : String in loadedClasses[METADATA_TABLE.toLowerCase()])
                 {
-                    if (className.indexOf(packageName) > -1)
-                    {
-                        processClass(getDefinitionByName(className) as Class);
-                    }
+                    processClass(getDefinitionByName(className) as Class);
                 }
                 _processedPackages.push(packageName);
             }
