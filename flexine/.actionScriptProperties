@@ -18,6 +18,9 @@
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
     <sourceAttachmentPath>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="D:/Ghazi/workspace/Applications/FlexineAlkiteb/flexine/libs/as3commons-bytecode-1.0.swc" sourcepath="${SOURCES_REPO}/as3-commons/tags/as3-commons-bytecode/1.0-RC6/src/main/actionscript" useDefaultLinkType="false"/>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="D:/Ghazi/workspace/Applications/FlexineAlkiteb/flexine/libs/as3commons-lang-0.3.5.swc" sourcepath="${SOURCES_REPO}/as3-commons/trunk/as3-commons-lang/src/main/actionscript" useDefaultLinkType="false"/>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="D:/Ghazi/workspace/Applications/FlexineAlkiteb/flexine/libs/as3commons-logging-2.7.swc" sourcepath="${SOURCES_REPO}/as3-commons/tags/as3-commons-logging/2.7/src/main/actionscript" useDefaultLinkType="false"/>
       <sourceAttachmentPathEntry kind="3" linkType="1" path="D:/Ghazi/workspace/Applications/FlexineAlkiteb/flexine/libs/as3commons-metadata-1.0.swc" sourcepath="${SOURCES_REPO}/as3-commons/tags/as3-commons-metadata/1.0/src/main/actionscript" useDefaultLinkType="false"/>
       <sourceAttachmentPathEntry kind="3" linkType="1" path="D:/Ghazi/workspace/Applications/FlexineAlkiteb/flexine/libs/as3commons-reflect-1.5.swc" sourcepath="${SOURCES_REPO}/as3-commons/tags/as3-commons-reflect/1.5/src/main/actionscript" useDefaultLinkType="false"/>
     </sourceAttachmentPath>

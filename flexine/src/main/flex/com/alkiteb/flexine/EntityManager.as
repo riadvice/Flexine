@@ -51,7 +51,6 @@ package com.alkiteb.flexine
             {
                 localInstantiation = true;
                 _instance = new EntityManager();
-                _metadataRegistry = new FlexineMetadataRegistry();
                 localInstantiation = false;
             }
             return _instance;
@@ -64,6 +63,14 @@ package com.alkiteb.flexine
         {
             // TODO : close the previous connection if exists
             _config = config;
+            // Every time an SQL Configuration is set we call the time consuming
+            // bytecode classes check
+            _metadataRegistry ||= new FlexineMetadataRegistry();
+        }
+
+        public function get configuration() : SQLConfiguration
+        {
+            return _config;
         }
 
         /**
@@ -75,6 +82,7 @@ package com.alkiteb.flexine
             if (_config)
             {
                 _config.connection.open(new File(_config.dbPath), _config.sqlMode);
+                _metadataRegistry.processPackage(_config);
             }
             else
             {
@@ -120,7 +128,7 @@ package com.alkiteb.flexine
         public function findAll( clazz : Class ) : ArrayCollection
         {
             var result : ArrayCollection = new ArrayCollection();
-            var selectAllQuery : SelectQuery = new SelectQuery(_config, _metadataRegistry.process(clazz, [_config]));
+            var selectAllQuery : SelectQuery = new SelectQuery(_config, _metadataRegistry.getEntityByClass(clazz));
             selectAllQuery.execute();
             return ResultConverter.convertToCollection(selectAllQuery.result, _metadataRegistry.getEntityByClass(clazz));
         }

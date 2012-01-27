@@ -19,55 +19,121 @@ package com.alkiteb.flexine.metadata.registry
     import com.alkiteb.flexine.config.EntitiesCache;
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.entity.Entity;
-    import com.alkiteb.flexine.metadata.process.ColumnMetadataProcessor;
-    import com.alkiteb.flexine.metadata.process.TableMetadateProcessor;
+    import com.alkiteb.flexine.mapping.Column;
+    import com.alkiteb.flexine.mapping.Table;
     import com.alkiteb.flexine.query.CreateTableQuery;
+    import com.alkiteb.flexine.sql.SQLTypes;
+    import com.alkiteb.flexine.util.MetadataUtils;
 
     import flash.data.SQLMode;
+    import flash.utils.getDefinitionByName;
 
-    import org.as3commons.metadata.registry.impl.AS3ReflectMetadataProcessorRegistry;
+    import mx.core.FlexGlobals;
+
+    import org.as3commons.bytecode.reflect.ByteCodeTypeProvider;
+    import org.as3commons.reflect.Accessor;
     import org.as3commons.reflect.Type;
+    import org.as3commons.reflect.Variable;
 
-    public class FlexineMetadataRegistry extends AS3ReflectMetadataProcessorRegistry
+    public class FlexineMetadataRegistry
     {
+        private static const METADATA_TABLE : String = "Table";
+        private static const METADATA_COLUMN : String = "Column";
+
         private var _entity : Entity;
-        private var _tableMetadataProcessor : TableMetadateProcessor;
-        private var _columnMetadataProcessor : ColumnMetadataProcessor;
+        private var _processedPackages : Array;
 
         private var _createTableQuery : CreateTableQuery;
+        private var _sqlConfiguration : SQLConfiguration;
 
         public function FlexineMetadataRegistry()
         {
             super();
-            addProcessor(_tableMetadataProcessor = new TableMetadateProcessor(this));
-            _columnMetadataProcessor = new ColumnMetadataProcessor();
+            _processedPackages = [];
         }
 
-        override public function process( target : Object, params : Array = null ) : *
+        /**
+         * Processes the package that the user defines. This package must contain
+         * user persistence classes.
+         */
+        public function processPackage( sqlConfiguration : SQLConfiguration = null ) : void
+        {
+            var startDate : Date = new Date();
+            _sqlConfiguration = sqlConfiguration
+            var packageName : String = sqlConfiguration.persistencePackage;
+            if (packageName && _processedPackages.indexOf(packageName) < 0)
+            {
+                var loadedClasses : Array = new ByteCodeTypeProvider().definitionNamesFromLoader(FlexGlobals.topLevelApplication.systemManager.loaderInfo);
+                for each (var className : String in loadedClasses)
+                {
+                    if (className.indexOf(packageName) > -1)
+                    {
+                        processClass(getDefinitionByName(className) as Class);
+                    }
+                }
+                _processedPackages.push(packageName);
+            }
+
+        }
+
+        /**
+         * Processes a class metadata to extract the Entity
+         */
+        public function processClass( target : Object, params : Array = null ) : Entity
         {
             // First we try to find if the class entity was already cached
             _entity = getEntityByClass(target as Class);
             if (!_entity)
             {
                 // Else we scan the class metadata
-                super.process(target, params);
-                var type : Type = Type.forInstance(target, super.applicationDomain);
+                var type : Type = Type.forInstance(target);
 
                 _entity = new Entity();
                 _entity.clazz = target as Class;
-                _entity.table = _tableMetadataProcessor.table;
-                _entity.columns = _columnMetadataProcessor.processColumns(target, [type]);
+                _entity.table = processTable(type);
+                _entity.columns = processColumns(type);
 
                 // Creating the table if not exists
-                if (params && params[0] is SQLConfiguration && params[0].sqlMode != SQLMode.READ)
+                if (_sqlConfiguration && _sqlConfiguration.sqlMode != SQLMode.READ)
                 {
-                    _createTableQuery = new CreateTableQuery(params[0], _entity);
+                    _createTableQuery = new CreateTableQuery(_sqlConfiguration, _entity);
                     _createTableQuery.execute();
                 }
 
                 EntitiesCache.cacheEntity(_entity);
             }
             return _entity;
+        }
+
+        /**
+         * Processes Table metadata
+         */
+        private function processTable( type : Type ) : Table
+        {
+            var table : Table = new Table();
+            var tableMetadatas : Array = type.metadata;
+            table = MetadataUtils.fillObjectFromMetadata(tableMetadatas, METADATA_TABLE, Table);
+            table.schema ||= "main";
+            return table;
+        }
+
+        private function processColumns( type : Type ) : Array
+        {
+            var properties : Array = type.properties;
+            var column : Column;
+            var columns : Array = [];
+            for each (var property : * in properties)
+            {
+                if ((property is Accessor && property.isWriteable()) || property is Variable)
+                {
+                    column = MetadataUtils.fillObjectFromMetadata(property.metadata, METADATA_COLUMN, Column);
+                    column.name ||= property.name;
+                    column.type ||= SQLTypes.getSQLType(property.type.name);
+                    column.property = property.name;
+                    columns.push(column);
+                }
+            }
+            return columns;
         }
 
         /**

@@ -16,6 +16,7 @@
  */
 package com.alkiteb.flexine.entity
 {
+    import com.alkiteb.flexine.mapping.Column;
     import com.alkiteb.flexine.mapping.Table;
 
     public class Entity
@@ -43,15 +44,28 @@ package com.alkiteb.flexine.entity
         {
             _clazz = value;
         }
-        
-        public function get columns():Array
+
+        public function get columns() : Array
         {
             return _columns;
         }
-        
-        public function set columns(value:Array):void
+
+        public function set columns( value : Array ) : void
         {
             _columns = value;
+        }
+
+        public function getPropertyNameForColumn( columnName : String ) : String
+        {
+            var propName : String;
+            for each (var column : Column in columns)
+            {
+                if (column.name == columnName)
+                {
+                    propName = column.property;
+                }
+            }
+            return propName;
         }
 
     }

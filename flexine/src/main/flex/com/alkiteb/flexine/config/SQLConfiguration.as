@@ -23,6 +23,7 @@ package com.alkiteb.flexine.config
         private var _connection : SQLConnection;
         private var _dbPath : String;
         private var _sqlMode : String;
+        private var _persistencePackage : String;
 
         public function SQLConfiguration( dbPath : String, sqlMode : String )
         {
@@ -45,6 +46,20 @@ package com.alkiteb.flexine.config
         public function get sqlMode() : String
         {
             return _sqlMode;
+        }
+
+        public function get persistencePackage() : String
+        {
+            return _persistencePackage;
+        }
+
+        public function set persistencePackage( value : String ) : void
+        {
+            // Persistence package can be set only one time
+            if (!_persistencePackage)
+            {
+                _persistencePackage = value;
+            }
         }
     }
 }

@@ -46,7 +46,7 @@ package com.alkiteb.flexine.util
                 item = ClassUtils.newInstance(entity.clazz);
                 for each (var prop : * in ObjectUtils.getKeys(resultItem))
                 {
-                    item[prop] = resultItem[prop];
+                    item[entity.getPropertyNameForColumn(prop)] = resultItem[prop];
                 }
                 collection.addItem(item);
             }

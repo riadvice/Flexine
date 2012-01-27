@@ -10,7 +10,6 @@
     <classEntry path="com.alkiteb.flexine.sql.SQLTypes"/>
     <classEntry path="com.alkiteb.flexine.config.EntitiesCache"/>
     <classEntry path="com.alkiteb.flexine.errors.ConfigurationError"/>
-    <classEntry path="com.alkiteb.flexine.metadata.process.TableMetadateProcessor"/>
     <classEntry path="com.alkiteb.flexine.metadata.registry.FlexineMetadataRegistry"/>
     <classEntry path="com.alkiteb.flexine.metadata.process.FlexineMetadataProcessor"/>
     <classEntry path="com.alkiteb.flexine.util.Inflector"/>

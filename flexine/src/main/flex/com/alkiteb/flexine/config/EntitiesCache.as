@@ -17,9 +17,9 @@
 package com.alkiteb.flexine.config
 {
     import com.alkiteb.flexine.entity.Entity;
-    
+
     import flash.utils.Dictionary;
-    
+
     import org.as3commons.lang.DictionaryUtils;
 
     [ExcludeClass]
@@ -50,7 +50,7 @@ package com.alkiteb.flexine.config
         {
             delete _cachedEntities[entity.clazz];
         }
-        
+
         /**
          * Returns a cached entity.
          */
