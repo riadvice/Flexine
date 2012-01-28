@@ -27,12 +27,15 @@ package com.alkiteb.flexine.config
 
         public function SQLConfiguration( dbPath : String, sqlMode : String )
         {
-            // TODO : add isTransactional
+            // TODO : add isTransactional mode
             _connection = new SQLConnection();
             _dbPath = dbPath;
             _sqlMode = sqlMode;
         }
 
+        /**
+         * Returns the inner SQLConnection.
+         */
         public function get connection() : SQLConnection
         {
             return _connection;
@@ -43,6 +46,9 @@ package com.alkiteb.flexine.config
             return _dbPath;
         }
 
+        /**
+         * The full path to the database file.
+         */
         public function get sqlMode() : String
         {
             return _sqlMode;
@@ -53,6 +59,11 @@ package com.alkiteb.flexine.config
             return _persistencePackage;
         }
 
+        /**
+         * The persistence package is a package that contains the classes that will be processed
+         * for the current connection. It can be set only once and cannot be modified for its parent
+         * confiugration.
+         */
         public function set persistencePackage( value : String ) : void
         {
             // Persistence package can be set only one time
