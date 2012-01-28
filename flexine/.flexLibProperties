@@ -21,6 +21,7 @@
     <classEntry path="com.alkiteb.flexine.util.MetadataUtils"/>
     <classEntry path="com.alkiteb.flexine.query.CreateTableQuery"/>
     <classEntry path="com.alkiteb.flexine.query.DropTableQuery"/>
+    <classEntry path="com.alkiteb.flexine.query.InsertQuery"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

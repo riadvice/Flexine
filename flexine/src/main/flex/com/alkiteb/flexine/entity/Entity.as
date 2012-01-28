@@ -63,9 +63,24 @@ package com.alkiteb.flexine.entity
                 if (column.name == columnName)
                 {
                     propName = column.property;
+                    break;
                 }
             }
             return propName;
+        }
+        
+        public function getColumnForPropertyName( property : String ) : String
+        {
+            var colName : String;
+            for each (var column : Column in columns)
+            {
+                if (column.property == property)
+                {
+                    colName = column.name;
+                    break;
+                }
+            }
+            return colName;
         }
 
     }

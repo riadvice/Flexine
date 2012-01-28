@@ -20,12 +20,15 @@ package com.alkiteb.flexine
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
     import com.alkiteb.flexine.metadata.registry.FlexineMetadataRegistry;
+    import com.alkiteb.flexine.query.InsertQuery;
     import com.alkiteb.flexine.query.SelectQuery;
     import com.alkiteb.flexine.util.ResultConverter;
 
     import flash.filesystem.File;
 
     import mx.collections.ArrayCollection;
+
+    import org.as3commons.lang.ClassUtils;
 
     public class EntityManager
     {
@@ -131,6 +134,15 @@ package com.alkiteb.flexine
             var selectAllQuery : SelectQuery = new SelectQuery(_config, _metadataRegistry.getEntityByClass(clazz));
             selectAllQuery.execute();
             return ResultConverter.convertToCollection(selectAllQuery.result, _metadataRegistry.getEntityByClass(clazz));
+        }
+
+        /**
+         * Inserts in the database
+         */
+        public function create( obj : * ) : void
+        {
+            var insertQuery : InsertQuery = new InsertQuery(obj, _config, _metadataRegistry.getEntityByClass(ClassUtils.forInstance(obj)));
+            insertQuery.execute();
         }
 
     }
