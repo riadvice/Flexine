@@ -44,6 +44,7 @@ package com.alkiteb.flexine.api
         private var readDB : String = "api_read_test.db";
 
         private var genericDB : String = "generic_db_test.db";
+        private var genericDBEntries : Array = [];
 
         [Before]
         public function setUp() : void
@@ -82,15 +83,12 @@ package com.alkiteb.flexine.api
         /**
          * Cleans up the configuration before each test run
          */
-        public function cleanUp( removeFile : Boolean = false ) : void
+        public function cleanUp() : void
         {
             try
             {
                 EntityManager.instance.closeConnection();
-                if (removeFile)
-                {
-                    new File(EntityManager.instance.configuration.dbPath).deleteFile();
-                }
+                cleanGenericDbFile();
             }
             catch ( e : Error )
             {
@@ -99,18 +97,45 @@ package com.alkiteb.flexine.api
             EntityManager.instance.configuration = null;
         }
 
+        public function cleanGenericDbFile() : void
+        {
+            try
+            {
+                var genDBFile : File = new File(File.applicationDirectory.resolvePath(genericDB).nativePath);
+                if (genDBFile.exists)
+                {
+                    genDBFile.deleteFile();
+                }
+            }
+            catch ( e : Error )
+            {
+                // No connection was open
+            }
+        }
+
         public function addEntries( connection : SQLConnection ) : void
         {
-            for each (var query : String in["INSERT INTO main.string_table (name) values('hello')",
-                "INSERT INTO main.string_table (name) values('world');"])
-            {
-                var stmt : SQLStatement = new SQLStatement();
-                stmt.sqlConnection = connection;
-                stmt.sqlConnection.begin();
-                stmt.text = query;
-                stmt.execute();
-                stmt.sqlConnection.commit();
-            }
+            var obj1 : StringModel = new StringModel();
+            obj1.active = true;
+            obj1.lastName = "Ghazi";
+            obj1.name = "Triki";
+            obj1.sent_date = new Date(1985, 11, 30);
+            obj1.simpleXML = new XML(<tag><!-- Added using Flexine ORM --></tag>
+                );
+
+            genericDBEntries.push(obj1);
+            EntityManager.instance.create(obj1);
+
+            var obj2 : StringModel = new StringModel();
+            obj2.active = true;
+            obj2.lastName = "John";
+            obj2.name = "Doe";
+            obj2.sent_date = new Date(1985, 11, 30);
+            obj2.simpleXML = new XML(<tag><!-- Added using Flexine ORM --></tag>
+                );
+
+            genericDBEntries.push(obj2);
+            EntityManager.instance.create(obj2);
         }
 
         [Test]
@@ -242,19 +267,24 @@ package com.alkiteb.flexine.api
         [Test]
         public function findAll() : void
         {
+            cleanGenericDbFile();
             EntityManager.instance.configuration = configGenericDb;
             EntityManager.instance.openConnection();
-            // FIXME : update test after adding save and create methods in EntityManager
-            // prepareSimpleTable(configGenericDb.connection);
             EntityManager.instance.findAll(StringModel);
             addEntries(configGenericDb.connection)
             var result : ArrayCollection = EntityManager.instance.findAll(StringModel);
             Assert.assertEquals(result.length, 2);
-            Assert.assertTrue(result.getItemAt(0) is StringModel);
-            Assert.assertTrue(result.getItemAt(1) is StringModel);
-            Assert.assertEquals(result.getItemAt(0).name, 'hello');
-            Assert.assertEquals(result.getItemAt(1).name, 'world');
-            cleanUp(true);
+            for (var i : int; i < result.length; i++)
+            {
+                var obj : * = result.getItemAt(i);
+                var origObj : * = genericDBEntries[i];
+                Assert.assertTrue(obj is StringModel);
+                Assert.assertEquals(obj.name, origObj.name);
+                Assert.assertEquals(obj.lastName, origObj.lastName);
+                Assert.assertEquals(obj.sent_date.time, origObj.sent_date.time);
+                Assert.assertEquals(obj.simpleXML, origObj.simpleXML);
+            }
+            cleanUp();
         }
 
     }
