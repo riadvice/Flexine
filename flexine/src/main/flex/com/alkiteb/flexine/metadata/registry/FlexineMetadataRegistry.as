@@ -111,6 +111,7 @@ package com.alkiteb.flexine.metadata.registry
             var tableMetadatas : Array = type.metadata;
             table = MetadataUtils.fillObjectFromMetadata(tableMetadatas, METADATA_TABLE, Table);
             table.schema ||= "main";
+            table.name ||= type.name;
             return table;
         }
 
