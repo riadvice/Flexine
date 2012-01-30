@@ -23,6 +23,9 @@ package com.alkiteb.flexine.models.generic
         [Column(id = true)]
         public var modelId;
 
+        [Column(id = true)]
+        public var secondId;
+        
         public var userData : XMLList;
     }
 }
