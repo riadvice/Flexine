@@ -20,9 +20,9 @@ package com.alkiteb.flexine.models.generic
     [Table]
     public class PrimaryModel
     {
-        [Column(id=true)]
+        [Column(id = true)]
         public var modelId;
-        
+
         public var userData : XMLList;
     }
 }

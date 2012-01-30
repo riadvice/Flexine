@@ -91,5 +91,15 @@ package com.alkiteb.flexine.entity
             return _columnsByProperty[property].name;
         }
 
+        public function getPrimaryKeyNames() : Array
+        {
+            var primaryKeys : Array = [];
+            for (var key : * in _primaryKey)
+            {
+                primaryKeys.push(key.name);
+            }
+            return primaryKeys;
+        }
+
     }
 }

@@ -19,14 +19,14 @@ package com.alkiteb.flexine.sql
 
     public class SQLTypes
     {
-        public static const BOOLEAN : String = "Boolean";
-        public static const DATE : String = "Date";
-        public static const INTEGER : String = "Integer";
-        public static const NUMBER : String = "Real";
-        public static const OBJECT : String = "Object";
-        public static const STRING : String = "String";
+        public static const BOOLEAN : String = "BOOLEAN";
+        public static const DATE : String = "DATE";
+        public static const INTEGER : String = "INTEGER";
+        public static const NUMBER : String = "REAL";
+        public static const OBJECT : String = "OBJECT";
+        public static const STRING : String = "TEXT";
         public static const XML : String = "XML";
-        public static const XMLLIST : String = "XMLList";
+        public static const XMLLIST : String = "XMLLIST";
 
         /**
          * Returns the corresponding SQL type to the ActionScript type

@@ -54,7 +54,18 @@ package com.alkiteb.flexine.query
             {
                 colDefs.push([column.name, column.type].join(" "));
             }
+            if (_entity.getPrimaryKeyNames().length > 0)
+            {
+                colDefs.push(constructPrimaryKey());
+            }
             return ["(", colDefs.join(", "), ")"].join(" ");
+        }
+
+        private function constructPrimaryKey() : String
+        {
+            var primaryKeyQuery : String;
+            primaryKeyQuery = [SQL.PRIMARY, SQL.KEY, "(", _entity.getPrimaryKeyNames().join(","), ")"].join(" ");
+            return primaryKeyQuery;
         }
 
     }
