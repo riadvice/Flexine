@@ -41,7 +41,7 @@ package com.alkiteb.flexine.util
 
             var collection : ArrayCollection = new ArrayCollection();
             var item : Object;
-            for each (var resultItem in result.data)
+            for each (var resultItem : Object in result.data)
             {
                 item = ClassUtils.newInstance(entity.clazz);
                 for each (var prop : * in ObjectUtils.getKeys(resultItem))

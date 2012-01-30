@@ -14,17 +14,15 @@
    You should have received a copy of the GNU General Public License
    along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alkiteb.flexine.mapping
+package com.alkiteb.flexine.models.generic
 {
 
-    public final class Column
+    [Table]
+    public class PrimaryModel
     {
-        public var name : String;
-
-        public var type : String;
-
-        public var property : String;
-
-        public var id : Boolean;
+        [Column(id=true)]
+        public var modelId;
+        
+        public var userData : XMLList;
     }
 }

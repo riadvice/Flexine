@@ -19,11 +19,26 @@ package com.alkiteb.flexine.entity
     import com.alkiteb.flexine.mapping.Column;
     import com.alkiteb.flexine.mapping.Table;
 
+    import flash.utils.Dictionary;
+
+    import mx.utils.ArrayUtil;
+
+    import org.as3commons.lang.ArrayUtils;
+
     public class Entity
     {
         private var _table : Table;
         private var _clazz : Class;
-        private var _columns : Array;
+        private var _columnsByName : Dictionary;
+        private var _columnsByProperty : Dictionary;
+        private var _primaryKey : Dictionary;
+
+        public function Entity()
+        {
+            _columnsByName = new Dictionary(true);
+            _columnsByProperty = new Dictionary(true);
+            _primaryKey = new Dictionary(true);
+        }
 
         public function get table() : Table
         {
@@ -47,40 +62,33 @@ package com.alkiteb.flexine.entity
 
         public function get columns() : Array
         {
-            return _columns;
+            var cols : Array = [];
+            for (var key : String in _columnsByName)
+            {
+                cols.push(_columnsByName[key]);
+            }
+            return cols;
+
         }
 
-        public function set columns( value : Array ) : void
+        public function addColumn( column : Column ) : void
         {
-            _columns = value;
+            _columnsByName[column.name] = column;
+            _columnsByProperty[column.property] = column;
+            if (column.id)
+            {
+                _primaryKey[column] = column;
+            }
         }
 
         public function getPropertyNameForColumn( columnName : String ) : String
         {
-            var propName : String;
-            for each (var column : Column in columns)
-            {
-                if (column.name == columnName)
-                {
-                    propName = column.property;
-                    break;
-                }
-            }
-            return propName;
+            return _columnsByName[columnName].property;
         }
-        
+
         public function getColumnForPropertyName( property : String ) : String
         {
-            var colName : String;
-            for each (var column : Column in columns)
-            {
-                if (column.property == property)
-                {
-                    colName = column.name;
-                    break;
-                }
-            }
-            return colName;
+            return _columnsByProperty[property].name;
         }
 
     }

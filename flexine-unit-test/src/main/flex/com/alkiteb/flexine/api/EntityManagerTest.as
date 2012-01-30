@@ -19,6 +19,7 @@ package com.alkiteb.flexine.api
     import com.alkiteb.flexine.EntityManager;
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
+    import com.alkiteb.flexine.models.generic.PrimaryModel;
     import com.alkiteb.flexine.models.generic.StringModel;
 
     import flash.data.SQLConnection;
@@ -49,6 +50,8 @@ package com.alkiteb.flexine.api
         [Before]
         public function setUp() : void
         {
+            StringModel;
+            PrimaryModel;
             try
             {
                 File.applicationDirectory.resolvePath(createDB).deleteFile();
@@ -88,7 +91,6 @@ package com.alkiteb.flexine.api
             try
             {
                 EntityManager.instance.closeConnection();
-                cleanGenericDbFile();
             }
             catch ( e : Error )
             {
@@ -127,11 +129,11 @@ package com.alkiteb.flexine.api
             EntityManager.instance.create(obj1);
 
             var obj2 : StringModel = new StringModel();
-            obj2.active = true;
+            obj2.active = false;
             obj2.lastName = "John";
             obj2.name = "Doe";
-            obj2.sent_date = new Date(1985, 11, 30);
-            obj2.simpleXML = new XML(<tag><!-- Added using Flexine ORM --></tag>
+            obj2.sent_date = new Date(1960, 5, 15);
+            obj2.simpleXML = new XML(<content><!-- Added using Flexine ORM --></content>
                 );
 
             genericDBEntries.push(obj2);

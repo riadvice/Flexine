@@ -88,7 +88,7 @@ package com.alkiteb.flexine.metadata.registry
                 _entity = new Entity();
                 _entity.clazz = target as Class;
                 _entity.table = processTable(type);
-                _entity.columns = processColumns(type);
+                processColumns(type);
 
                 // Creating the table if not exists
                 if (_sqlConfiguration && _sqlConfiguration.sqlMode != SQLMode.READ)
@@ -115,11 +115,10 @@ package com.alkiteb.flexine.metadata.registry
             return table;
         }
 
-        private function processColumns( type : Type ) : Array
+        private function processColumns( type : Type ) : void
         {
             var properties : Array = type.properties;
             var column : Column;
-            var columns : Array = [];
             for each (var property : * in properties)
             {
                 if ((property is Accessor && property.isWriteable()) || property is Variable)
@@ -128,10 +127,9 @@ package com.alkiteb.flexine.metadata.registry
                     column.name ||= property.name;
                     column.type ||= SQLTypes.getSQLType(property.type.name);
                     column.property = property.name;
-                    columns.push(column);
+                    _entity.addColumn(column);
                 }
             }
-            return columns;
         }
 
         /**
