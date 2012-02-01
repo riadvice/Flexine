@@ -44,6 +44,7 @@ package com.alkiteb.flexine.query
 
         public function execute() : void
         {
+            _statement.clearParameters();
             prepareStatement();
             _statement.execute();
         }
