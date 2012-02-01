@@ -49,7 +49,7 @@ package com.alkiteb.flexine.query
         private function constructColumns() : String
         {
             // TODO : handle primary keys and foreign keys
-            var colDefs : Array = [];
+            var colDefs : Vector.<String> = new Vector.<String>();
             for each (var column : Column in _entity.columns)
             {
                 colDefs.push([column.name, column.type].join(" "));

@@ -24,12 +24,12 @@ package com.alkiteb.flexine.metadata.registry
     import com.alkiteb.flexine.query.CreateTableQuery;
     import com.alkiteb.flexine.sql.SQLTypes;
     import com.alkiteb.flexine.util.MetadataUtils;
-
+    
     import flash.data.SQLMode;
     import flash.utils.getDefinitionByName;
-
+    
     import mx.core.FlexGlobals;
-
+    
     import org.as3commons.bytecode.reflect.ByteCodeType;
     import org.as3commons.reflect.Accessor;
     import org.as3commons.reflect.Type;
@@ -41,7 +41,7 @@ package com.alkiteb.flexine.metadata.registry
         private static const METADATA_COLUMN : String = "Column";
 
         private var _entity : Entity;
-        private var _processedPackages : Array;
+        private var _processedPackages : Vector.<String>;
 
         private var _createTableQuery : CreateTableQuery;
         private var _sqlConfiguration : SQLConfiguration;
@@ -49,7 +49,7 @@ package com.alkiteb.flexine.metadata.registry
         public function FlexineMetadataRegistry()
         {
             super();
-            _processedPackages = [];
+            _processedPackages = new Vector.<String>();
         }
 
         /**

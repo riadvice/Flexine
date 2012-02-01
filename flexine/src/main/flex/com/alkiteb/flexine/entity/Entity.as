@@ -18,12 +18,8 @@ package com.alkiteb.flexine.entity
 {
     import com.alkiteb.flexine.mapping.Column;
     import com.alkiteb.flexine.mapping.Table;
-
+    
     import flash.utils.Dictionary;
-
-    import mx.utils.ArrayUtil;
-
-    import org.as3commons.lang.ArrayUtils;
 
     public class Entity
     {
@@ -60,9 +56,9 @@ package com.alkiteb.flexine.entity
             _clazz = value;
         }
 
-        public function get columns() : Array
+        public function get columns() : Vector.<Column>
         {
-            var cols : Array = [];
+            var cols : Vector.<Column> = new Vector.<Column>();
             for (var key : String in _columnsByName)
             {
                 cols.push(_columnsByName[key]);
@@ -91,9 +87,9 @@ package com.alkiteb.flexine.entity
             return _columnsByProperty[property].name;
         }
 
-        public function getPrimaryKeyNames() : Array
+        public function getPrimaryKeyNames() : Vector.<String>
         {
-            var primaryKeys : Array = [];
+            var primaryKeys : Vector.<String> = new Vector.<String>();
             for (var key : * in _primaryKey)
             {
                 primaryKeys.push(key.name);
