@@ -22,7 +22,6 @@ package com.alkiteb.flexine.util
 
     import mx.collections.ArrayCollection;
 
-    import org.as3commons.lang.ClassUtils;
     import org.as3commons.lang.ObjectUtils;
 
     public class ResultConverter
@@ -30,6 +29,11 @@ package com.alkiteb.flexine.util
         public static function convertToTypedObject( result : Object, targetEntity : Entity ) : *
         {
             var typedObject : * = new targetEntity.clazz();
+            for each (var prop : * in ObjectUtils.getKeys(result))
+            {
+                typedObject[targetEntity.getPropertyNameForColumn(prop)] = result[prop];
+            }
+            return typedObject;
         }
 
         public static function convertToCollection( result : SQLResult, entity : Entity ) : ArrayCollection
@@ -43,12 +47,7 @@ package com.alkiteb.flexine.util
             var item : Object;
             for each (var resultItem : Object in result.data)
             {
-                item = ClassUtils.newInstance(entity.clazz);
-                for each (var prop : * in ObjectUtils.getKeys(resultItem))
-                {
-                    item[entity.getPropertyNameForColumn(prop)] = resultItem[prop];
-                }
-                collection.addItem(item);
+                collection.addItem(convertToTypedObject(resultItem, entity));
             }
             return collection;
         }
