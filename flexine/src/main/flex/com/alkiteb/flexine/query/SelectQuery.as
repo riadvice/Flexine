@@ -18,6 +18,7 @@ package com.alkiteb.flexine.query
 {
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.entity.Entity;
+    import com.alkiteb.flexine.mapping.Column;
     import com.alkiteb.flexine.sql.SQL;
 
     public class SelectQuery extends SQLQuery
@@ -31,12 +32,17 @@ package com.alkiteb.flexine.query
 
         override public function prepareStatement() : void
         {
-            _statement.text = [SQL.SELECT, !_distinct ? SQL.ALL : SQL.DISTINCT, columns, SQL.FROM, tableName].join(" ") + ";";
+            _statement.text = [SQL.SELECT, !_distinct ? SQL.ALL : SQL.DISTINCT, columns.join(","), SQL.FROM, tableName].join(" ") + ";";
         }
 
-        public function get columns() : String
+        public function get columns() : Vector.<String>
         {
-            return "*";
+            var result : Vector.<String> = new Vector.<String>();
+            for each (var column : Column in _entity.columns)
+            {
+                result.push(_entity.getColumnForPropertyName(column.property));
+            }
+            return result;
         }
 
         public function distinct( value : Boolean ) : void
