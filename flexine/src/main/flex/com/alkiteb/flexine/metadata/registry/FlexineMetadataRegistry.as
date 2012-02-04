@@ -24,13 +24,14 @@ package com.alkiteb.flexine.metadata.registry
     import com.alkiteb.flexine.query.CreateTableQuery;
     import com.alkiteb.flexine.sql.SQLTypes;
     import com.alkiteb.flexine.util.MetadataUtils;
-    
+
     import flash.data.SQLMode;
     import flash.utils.getDefinitionByName;
-    
+
     import mx.core.FlexGlobals;
-    
+
     import org.as3commons.bytecode.reflect.ByteCodeType;
+    import org.as3commons.logging.api.getLogger;
     import org.as3commons.reflect.Accessor;
     import org.as3commons.reflect.Type;
     import org.as3commons.reflect.Variable;
@@ -63,6 +64,7 @@ package com.alkiteb.flexine.metadata.registry
             var packageName : String = sqlConfiguration.persistencePackage;
             if (packageName && _processedPackages.indexOf(packageName) < 0)
             {
+                getLogger(FlexineMetadataRegistry).debug("Processing models package {0}", [packageName]);
                 var loadedClasses : Object = ByteCodeType.metaDataLookupFromLoader(FlexGlobals.topLevelApplication.systemManager.loaderInfo);
                 for each (var className : String in loadedClasses[METADATA_TABLE.toLowerCase()])
                 {
@@ -98,6 +100,7 @@ package com.alkiteb.flexine.metadata.registry
                 }
 
                 EntitiesCache.cacheEntity(_entity);
+                getLogger(FlexineMetadataRegistry).debug("Model class {0} processed", [type.fullName]);
             }
             return _entity;
         }

@@ -23,6 +23,8 @@ package com.alkiteb.flexine.query
     import flash.data.SQLResult;
     import flash.data.SQLStatement;
 
+    import org.as3commons.logging.api.getLogger;
+
     public class SQLQuery
     {
         protected var _statement : SQLStatement;
@@ -46,6 +48,10 @@ package com.alkiteb.flexine.query
         {
             _statement.clearParameters();
             prepareStatement();
+            if (getLogger(SQLQuery).debugEnabled)
+            {
+                getLogger(this).debug(_statement.text);
+            }
             _statement.execute();
         }
 

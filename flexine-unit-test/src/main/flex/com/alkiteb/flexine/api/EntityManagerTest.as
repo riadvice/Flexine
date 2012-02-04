@@ -19,39 +19,52 @@ package com.alkiteb.flexine.api
     import com.alkiteb.flexine.EntityManager;
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
-    import com.alkiteb.flexine.models.generic.PrimaryModel;
     import com.alkiteb.flexine.models.generic.StringModel;
 
     import flash.data.SQLConnection;
     import flash.data.SQLMode;
-    import flash.data.SQLStatement;
     import flash.filesystem.File;
 
     import flexunit.framework.Assert;
 
     import mx.collections.ArrayCollection;
 
+    import org.as3commons.logging.api.LOGGER_FACTORY;
+    import org.as3commons.logging.api.getLogger;
+    import org.as3commons.logging.setup.SimpleTargetSetup;
+    import org.as3commons.logging.setup.target.TraceTarget;
+
     public class EntityManagerTest
     {
 
-        private var configCreateMode : SQLConfiguration;
-        private var configUpdateMode : SQLConfiguration;
-        private var configReadMode : SQLConfiguration;
+        private static var configCreateMode : SQLConfiguration;
+        private static var configUpdateMode : SQLConfiguration;
+        private static var configReadMode : SQLConfiguration;
 
-        private var configGenericDb : SQLConfiguration;
+        private static var configGenericDb : SQLConfiguration;
 
-        private var createDB : String = "api_create_test.db";
-        private var updateDB : String = "api_update_test.db";
-        private var readDB : String = "api_read_test.db";
+        private static var createDB : String = "api_create_test.db";
+        private static var updateDB : String = "api_update_test.db";
+        private static var readDB : String = "api_read_test.db";
 
-        private var genericDB : String = "generic_db_test.db";
-        private var genericDBEntries : Array = [];
+        private static var genericDB : String = "generic_db_test.db";
+        private static var genericDBEntries : Array = [];
 
         [Before]
         public function setUp() : void
         {
-            StringModel;
-            PrimaryModel;
+        }
+
+        [After]
+        public function tearDown() : void
+        {
+        }
+
+        [BeforeClass]
+        public static function setUpBeforeClass() : void
+        {
+            LOGGER_FACTORY.setup = new SimpleTargetSetup(new TraceTarget());
+            getLogger(EntityManagerTest).debug("Setting up EntityManagerTest test");
             try
             {
                 File.applicationDirectory.resolvePath(createDB).deleteFile();
@@ -66,16 +79,8 @@ package com.alkiteb.flexine.api
 
             configGenericDb = new SQLConfiguration(File.applicationDirectory.resolvePath(genericDB).nativePath, SQLMode.CREATE)
             configGenericDb.persistencePackage = "com.alkiteb.flexine.models.generic"
-        }
 
-        [After]
-        public function tearDown() : void
-        {
-        }
-
-        [BeforeClass]
-        public static function setUpBeforeClass() : void
-        {
+            getLogger(EntityManagerTest).debug("EntityManagerTest test setup complete");
         }
 
         [AfterClass]

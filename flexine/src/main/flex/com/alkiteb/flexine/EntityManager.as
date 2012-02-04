@@ -29,6 +29,7 @@ package com.alkiteb.flexine
     import mx.collections.ArrayCollection;
 
     import org.as3commons.lang.ClassUtils;
+    import org.as3commons.logging.api.getLogger;
 
     public class EntityManager
     {
@@ -55,6 +56,7 @@ package com.alkiteb.flexine
                 localInstantiation = true;
                 _instance = new EntityManager();
                 localInstantiation = false;
+                getLogger(EntityManager).info("Singleton instance of EntityManager created");
             }
             return _instance;
         }
@@ -85,6 +87,7 @@ package com.alkiteb.flexine
             if (_config)
             {
                 _config.connection.open(new File(_config.dbPath), _config.sqlMode);
+                getLogger(EntityManager).info("Connection to {0} opened in {1} mode", [_config.dbPath, _config.sqlMode.toUpperCase()]);
                 _metadataRegistry.processPackage(_config);
             }
             else
@@ -99,6 +102,7 @@ package com.alkiteb.flexine
         public function closeConnection() : void
         {
             _config.connection.close();
+            getLogger(EntityManager).info("Connection closed for {0}", [_config.dbPath]);
         }
 
         /**
