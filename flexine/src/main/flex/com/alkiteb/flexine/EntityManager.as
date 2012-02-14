@@ -22,12 +22,13 @@ package com.alkiteb.flexine
     import com.alkiteb.flexine.metadata.registry.FlexineMetadataRegistry;
     import com.alkiteb.flexine.query.InsertQuery;
     import com.alkiteb.flexine.query.SelectQuery;
+    import com.alkiteb.flexine.query.UpdateQuery;
     import com.alkiteb.flexine.util.ResultConverter;
-
+    
     import flash.filesystem.File;
-
+    
     import mx.collections.ArrayCollection;
-
+    
     import org.as3commons.lang.ClassUtils;
     import org.as3commons.logging.api.getLogger;
 
@@ -128,6 +129,17 @@ package com.alkiteb.flexine
         {
             _config.connection.rollback();
         }
+
+        /**
+         * Updates an existing line in the database.
+         */
+        public function update( obj : * ) : *
+        {
+            var result : *;
+            var updateQuery : UpdateQuery = new UpdateQuery(obj,_config, _metadataRegistry.getEntityByClass(ClassUtils.forInstance(obj)));
+            updateQuery.execute();
+        }
+
 
         /**
          * Finds all records of a table using its mapping class.
