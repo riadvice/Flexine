@@ -20,15 +20,16 @@ package com.alkiteb.flexine.api
     import com.alkiteb.flexine.config.SQLConfiguration;
     import com.alkiteb.flexine.errors.ConfigurationError;
     import com.alkiteb.flexine.models.generic.StringModel;
-
+    import com.alkiteb.flexine.query.CreateTableQuery;
+    
     import flash.data.SQLConnection;
     import flash.data.SQLMode;
     import flash.filesystem.File;
-
+    
     import flexunit.framework.Assert;
-
+    
     import mx.collections.ArrayCollection;
-
+    
     import org.as3commons.logging.api.LOGGER_FACTORY;
     import org.as3commons.logging.api.getLogger;
     import org.as3commons.logging.setup.SimpleTargetSetup;
@@ -104,7 +105,7 @@ package com.alkiteb.flexine.api
             EntityManager.instance.configuration = null;
         }
 
-        public function cleanGenericDbFile() : void
+        public static function cleanGenericDbFile() : void
         {
             try
             {
@@ -277,7 +278,6 @@ package com.alkiteb.flexine.api
             cleanGenericDbFile();
             EntityManager.instance.configuration = configGenericDb;
             EntityManager.instance.openConnection();
-            EntityManager.instance.findAll(StringModel);
             addEntries(configGenericDb.connection)
             var result : ArrayCollection = EntityManager.instance.findAll(StringModel);
             Assert.assertEquals(result.length, 2);
@@ -294,5 +294,16 @@ package com.alkiteb.flexine.api
             cleanUp();
         }
 
+        
+        [Test]
+        public function update() : void
+        {
+            EntityManager.instance.configuration = configGenericDb;
+            EntityManager.instance.openConnection();
+            addEntries(configGenericDb.connection)
+            var result : ArrayCollection = EntityManager.instance.findAll(StringModel);
+            var obj1 : StringModel = result[0];
+            EntityManager.instance.update(obj1);
+        }
     }
 }
