@@ -35,7 +35,10 @@ package com.alkiteb.flexine.sql
         {
             switch (asType)
             {
-                case "int" || "uint":
+                case "int":
+                    return INTEGER;
+                    break;
+                case "uint":
                     return INTEGER;
                     break;
                 case "String":
