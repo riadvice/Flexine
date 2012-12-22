@@ -10,6 +10,7 @@
     <fx:Script>
         <![CDATA[
             import com.alkiteb.flexine.testsuite.FlexineTestSuite;
+            import com.alkiteb.flexine.api.EntityManagerTest;
             
             public function currentRunTestSuite():Array
             {
